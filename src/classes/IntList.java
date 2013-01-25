@@ -85,7 +85,7 @@ public class IntList implements Comparable {
             if (this.data[i] < that.data[i]) return -1;
             if (this.data[i] > that.data[i]) return 1;
         }
-        return this.size - that.size
+        return this.size - that.size;
     }
 
     protected void setCapactity(int n) {
