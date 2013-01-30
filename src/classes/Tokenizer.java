@@ -69,5 +69,24 @@ import java.io.IOException;
  * @author David Flanagan
  */
 
-public class Tokenizer {
+public interface Tokenizer {
+    // The following are token type constants.
+    /** End-of-file. Returned when there are no more characters to tokenize */
+    public static final int EOF = -1;
+    /** The token is a run of whitespace. @see #tokenizeSpaces() */
+    public static final int SPACE = -2;
+    /** The token is a run of digits. @see #tokenizeNumbers() */
+    public static final int NUMBER = -3;
+    /** The token is a run of word characters. @see #tokenizeWords() */
+    public static final int WORD = -4;
+    /** The token is a keyword. @see #keywords() */
+    public static final int KEYWORD = -5;
+    /** The token is arbitrary text returned by {@link #scan(char, boolean, boolean, boolean)}. */
+    public static final int TEXT = -6;
+    /** Beginning-of-file. This is the value returned by {@link #tokenType} when it is
+     * called before tokenization begins.
+     */
+    public static final int BOF = -7;
+    /** Special return value for {@link #scan(char, boolean, boolean, boolean)}. */
+    public static final int OVERFLOW = -8;
 }
