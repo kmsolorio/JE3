@@ -108,4 +108,13 @@ public interface Tokenizer {
      * @see #skipSpaces
      */
     public Tokenizer tokenizeSpaces(boolean tokenize);
+
+    /**
+     * Specify whether adjacent digit characters should be coalesced into a single token. The default is
+     * false.
+     * @param tokenize whether {@link #next} should be coalesced adjacent digits into a single
+     *                 {@link #NUNBER} token.
+     * @return this Tokenizer object for method chaining.
+     */
+    public Tokenizer tokenizeNumbers(boolean tokenize);
 }
