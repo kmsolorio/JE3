@@ -88,5 +88,24 @@ public interface Tokenizer {
      */
     public static final int BOF = -7;
     /** Special return value for {@link #scan(char, boolean, boolean, boolean)}. */
-    public static final int OVERFLOW = -8;
+    public static final int OVERFLOW = -8; // internal buffer overflow
+
+    /**
+     *  Specify whether to skip or return them.
+     *  @param skip if false (the default), then return whitespace characters or tokens.
+     *              If true, then next() never returns whitespace.
+     *  @return this Tokenizer object for method chaining.
+     *  @see #tokenizeSpaces
+     */
+    public Tokenizer skipSpaces(boolean skip);
+
+    /**
+     * Specify whether adjacent whitespace characters should be coalesced into a single SPACE token.
+     * This has no effect if spaces are being skipped. The default is false.
+     * @param tokenize whether {@link #next} should coalesce adjacent whitespace into a single
+     *                 {@link #SPACE} token.
+     * @return this Tokenizer object for method chaining.
+     * @see #skipSpaces
+     */
+    public Tokenizer tokenizeSpaces(boolean tokenize);
 }
