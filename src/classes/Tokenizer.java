@@ -149,4 +149,16 @@ public interface Tokenizer {
      * @see #tokenizeWords
      */
     public Tokenizer keywords(String[] keywords);
+
+    /**
+     * Specify whether the tokenizer should keep track of the line number and column number for each
+     * returned token. The default is false.
+     * If set to true, then tokenLine() and tokenColumn() return the line and column numbers of the
+     * current token.
+     * @param track wheather to track the line and column numbers for each token.
+     * @return this Tokenizer object for method chaining.
+     * @throws java.lang.IllegalStateException if invoked after tokenizing begins
+     * @see #tokenizeWords
+     */
+    public Tokenizer trackPosition(boolean track);
 }
