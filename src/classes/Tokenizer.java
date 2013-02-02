@@ -138,4 +138,15 @@ public interface Tokenizer {
      * @see #tokenizeWords
      */
     public Tokenizer wordRecognizer(WordRecognizer wordRecognizer);
+
+    /**
+     * Specify keywords to receive special recognition.
+     * If a {@link #WORD} token matches one of these keywords, then the token type will be set to
+     * {@link #KEYWORD}, and {@link #tokenKeyword} will return the index of the keyword in the specified
+     * array.
+     * @param keywords an array of words to be treated as keywords, or null (the default) for no keywords.
+     * @return this Tokenizer object for method chaining.
+     * @see #tokenizeWords
+     */
+    public Tokenizer keywords(String[] keywords);
 }
