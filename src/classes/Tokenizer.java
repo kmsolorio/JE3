@@ -117,4 +117,25 @@ public interface Tokenizer {
      * @return this Tokenizer object for method chaining.
      */
     public Tokenizer tokenizeNumbers(boolean tokenize);
+
+    /**
+     * Specify whether adjacent word characters should be coalesced into a single token.  The default is
+     * false. Word characters are defined by a {@link WordRecognizer}.
+     * @param tokenize wheather {@link #next} should coalesce adjacent word characters into a single
+     *                 {@link #WORD} token.
+     * @return this Tokenizer object for method chaining.
+     * @see #wordRecognizer
+     */
+    public Tokenizer tokenizeWords(boolean, tokenize);
+
+    /**
+     * Specify a {@link Tokenizer.WordRecognizer} to define what constitutes a word. If set to null
+     * (the default), then words are defined by {@link Character#isJavaIdentifierStart} and
+     * {@link Character#isJavaIdentifierPart}.
+     * This has no effect if word tokenizing has not been enabled.
+     * @param wordRecognizer the {@link Tokenizer.WordRecognizer} to use.
+     * @return this Tokenizer object for method chaining.
+     * @see #tokenizeWords
+     */
+    public Tokenizer wordRecognizer(WordRecognizer wordRecognizer);
 }
