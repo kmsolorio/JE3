@@ -184,4 +184,19 @@ public interface Tokenizer {
      * @see #scan(char, boolean, boolean, boolean)
      */
     public Tokenizer quotes(String openquotes, String closequotes);
+
+    /**
+     * Specify the maximum token length that the tokenizer is expected to accommodate. If presented with
+     * an input token longer than the specified size, a Tokenizer behavior is undefined.  Implementations
+     * must typically allocate an internal buffer at least this large, but may use a smaller buffer if
+     * they know that the total length of the input is smaller. Implementations should document their
+     * default value, and are encouraged to define constructors that take the token length as an argument.
+     *
+     * @param size maximum token length the tokenizer must handle. Must be > 0.
+     * @return this Tokenizer object for method chaining.
+     * @throws java.lang.IllegalArgumentException if <tt>size</tt> < 1.
+     * @throws java.lang.IllegalStateException if invoked after tokenizing begins.
+     */
+
+    public Tokenizer maximumTokenLength(int size);
 }
