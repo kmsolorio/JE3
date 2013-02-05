@@ -161,4 +161,27 @@ public interface Tokenizer {
      * @see #tokenizeWords
      */
     public Tokenizer trackPosition(boolean track);
+
+    /**
+     * Specify pairs of token delimiters. If the tokenizer encounters any character in <tt>openquotes</tt>,
+     * then it will scan until it encounters the corresponding character in <tt>closequotes</tt>. When such
+     * a token is tokenized, {@link #tokenType} returns the character from <tt>openquotes</tt> that was
+     * recognized and {@link #tokenText} returns the characters between, but not including the delimeters.
+     * Note that no escape characters are recognized. Quote tokenization occurs after other types of tokenization
+     * so <tt>openquotes</tt> should not include whitespace, number or word characters, if spaces, numbers,
+     * or words are being tokenized.
+     * <p>
+     *     Quote tokenization is useful for tokens other than quoted strings. For example to recognize
+     *     single-quoted strings and single-line comments, you might call this method like this:
+     *     <code>quotes("'#", "'\n");</code>
+     * </p>
+     * @param openquotes The string of characters that can begin a quote,
+     * @param closequotes The string of characters that end a quote
+     * @return this Tokenizer object for method chaining.
+     * @throws java.lang.NullPointerException if either argument is null
+     * @throws java.lang.IllegalArgumentException if <tt>openquotes</tt> and <tt>closequotes</tt>
+     *      have different lengths.
+     * @see #scan(char, boolean, boolean, boolean)
+     */
+    public Tokenizer quotes(String openquotes, String closequotes);
 }
