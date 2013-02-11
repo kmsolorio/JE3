@@ -219,5 +219,25 @@ public interface Tokenizer {
          * @return true if a word that begins with <tt>firstChar</tt> may contain the character <tt>c</tt>
          */
         public boolean isWordPart(char c, char firstChar);
+
+        /**
+         * Get the type of the current token. Valid token types are the token type constants (all negative
+         * values) defined by this interface, and all Unicode characters. Positive return values typically
+         * represent punctuation characters or other single characters that were not tokenized. But see
+         * {@link #quotes} for an exception.
+         * @return they type of the current token, or {@link #BOF} if no tokens have been read yet, or
+         *      {@link #EOF} if no more tokens are available.
+         */
+        public int tokenType();
+
+        /**
+         * Get the text of the current token.
+         * @return the text of the current token as a String, or null, when {@link #tokenType} returns
+         *      {@link #BOF} of {@link #EOF}.
+         *      Tokens delimited by quote characters (see {@link #quotes}) do not include the opening
+         *      and closing delimiters, so this method may return the empty string when an empty quote
+         *      is tokenized. The same is possible after a call to {@link #scan(char, boolean, boolean, boolean)}.
+         */
+        public String tokenText();
     }
 }
