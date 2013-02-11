@@ -197,6 +197,27 @@ public interface Tokenizer {
      * @throws java.lang.IllegalArgumentException if <tt>size</tt> < 1.
      * @throws java.lang.IllegalStateException if invoked after tokenizing begins.
      */
-
     public Tokenizer maximumTokenLength(int size);
+
+    /**
+     * This nested interface defines what a "word" is.
+     * @see Tokenizer#tokenizeWords
+     * @see Tokenizer#wordRecognizer
+     */
+    public static interface WordRecognizer {
+        /**
+         * Determine whether <tt>c</tt> is a valid word start character.
+         * @param c the character to test
+         * @return true if word may begin with the character <tt>c</tt>.
+         */
+        public boolean isWordStart(char c);
+
+        /**
+         * Determine whether the word that begins with <tt>firstChar</tt> may contain <tt>c</tt>.
+         * @param c the character to test.
+         * @param firstChar the character that started this word
+         * @return true if a word that begins with <tt>firstChar</tt> may contain the character <tt>c</tt>
+         */
+        public boolean isWordPart(char c, char firstChar);
+    }
 }
