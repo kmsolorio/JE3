@@ -239,5 +239,22 @@ public interface Tokenizer {
          *      is tokenized. The same is possible after a call to {@link #scan(char, boolean, boolean, boolean)}.
          */
         public String tokenText();
+
+        /**
+         * Get the index of the tokenized keyword.
+         * @return the index into the keywords array of the tokenized word or -1 if the current token
+         *      type is not {@link #KEYWORD}
+         * @see #keywords
+         */
+        public int tokenKeyword();
+
+        /**
+         * Get the line number of the current token.
+         * @return the line number of the start of the current token. Lines are numbered from 1, not 0. This
+         *      method returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet,
+         *      or if the current token is {@link #EOF}.
+         * @see #trackPosition
+         */
+        public int tokenLine();
     }
 }
