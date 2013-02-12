@@ -256,5 +256,14 @@ public interface Tokenizer {
          * @see #trackPosition
          */
         public int tokenLine();
+
+        /**
+         * Get the column number of the current token.
+         * @return The column of the start of the current token. Columns are numbered from 1 not 0. This method
+         *      returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet, or
+         *      if the current token is {@link #EOF}.
+         * @see #trackPosition
+         */
+        public int tokenColumn();
     }
 }
