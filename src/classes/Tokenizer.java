@@ -281,11 +281,37 @@ public interface Tokenizer {
      *         If configured to skip or tokenize spaces, and the current character is whitespace, coalesce
      *         any subsequent whitespace characters into a token. If spaces are being skipped, start
      *         tokenizing a new token; otherwise, make the space the current token and return {@link #SPACE}.
-     *         See {@link #skipSpaces}, {@link #tokenizeSpaces}, and {@link #tokenizeSpaces}.
+     *         See {@link #skipSpaces}, {@link #tokenizeSpaces}, and {@link Character#isWhitespace}
      *     </li>
      *     <li>
-     *
+     *         If configured to tokenize numbers and the current character is a digit, coalesce all adjacent
+     *         digits into a single token, make it the current token, and return {@link #NUMBER}. See
+     *         {@link #tokenizeNumbers} and {@link Character#isDigit}
+     *     </li>
+     *     <li>
+     *         If configured to tokenize words, and the current character is a word character, coalesce all
+     *         adjacent word characters into a single token, and make it the current token. If the word matches
+     *         a registered keyword, determine the keyword index and return {@link #KEYWORD}. Otherwise return
+     *         {@link #WORD}. Determine whether a character is a word character using the registered
+     *         {@link WordRecognizer}, if any, or with {@link Character#isJavaIdentifierStart} and
+     *         {@link Character#isJavaIdentifierPart}. See also {@link #tokenizeWords} and {@link #wordRecognizer}
+     *     </li>
+     *     <li>
+     *         If configured to tokenize quotes or other delimited tokens, and the current charater appears in
+     *         the string of opening delimiters, then scan until the character at the same position in the string
+     *         of closing delimiters is encountered or until there is no more input or the maximum token size
+     *         is reached. Coalesce the characters between (but not including) the delimiters into a single token,
+     *         set the token type to the opening delimiter, and return this character.
+     *         See {@link #quotes)}
+     *     </li>
+     *     <li>
+     *         If none of the steps above has returned a token, then make the current character the current token,
+     *         and return the current character.
      *     </li>
      * </ol>
+     *
+     * @return the type of the next token, or {@link #EOF} if there are no more tokens to be read.
+     * @see #nextChar @see #scan(char, boolean, boolean, boolean)
      */
+    public int next() throws IOException;
 }
