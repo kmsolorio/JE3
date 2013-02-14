@@ -70,6 +70,7 @@ import java.io.IOException;
  */
 
 public interface Tokenizer {
+
     // The following are token type constants.
     /** End-of-file. Returned when there are no more characters to tokenize */
     public static final int EOF = -1;
@@ -113,7 +114,7 @@ public interface Tokenizer {
      * Specify whether adjacent digit characters should be coalesced into a single token. The default is
      * false.
      * @param tokenize whether {@link #next} should be coalesced adjacent digits into a single
-     *                 {@link #NUNBER} token.
+     *                 {@link #NUMBER} token.
      * @return this Tokenizer object for method chaining.
      */
     public Tokenizer tokenizeNumbers(boolean tokenize);
@@ -126,7 +127,7 @@ public interface Tokenizer {
      * @return this Tokenizer object for method chaining.
      * @see #wordRecognizer
      */
-    public Tokenizer tokenizeWords(boolean, tokenize);
+    public Tokenizer tokenizeWords(boolean tokenize);
 
     /**
      * Specify a {@link Tokenizer.WordRecognizer} to define what constitutes a word. If set to null
@@ -220,50 +221,71 @@ public interface Tokenizer {
          */
         public boolean isWordPart(char c, char firstChar);
 
-        /**
-         * Get the type of the current token. Valid token types are the token type constants (all negative
-         * values) defined by this interface, and all Unicode characters. Positive return values typically
-         * represent punctuation characters or other single characters that were not tokenized. But see
-         * {@link #quotes} for an exception.
-         * @return they type of the current token, or {@link #BOF} if no tokens have been read yet, or
-         *      {@link #EOF} if no more tokens are available.
-         */
-        public int tokenType();
-
-        /**
-         * Get the text of the current token.
-         * @return the text of the current token as a String, or null, when {@link #tokenType} returns
-         *      {@link #BOF} of {@link #EOF}.
-         *      Tokens delimited by quote characters (see {@link #quotes}) do not include the opening
-         *      and closing delimiters, so this method may return the empty string when an empty quote
-         *      is tokenized. The same is possible after a call to {@link #scan(char, boolean, boolean, boolean)}.
-         */
-        public String tokenText();
-
-        /**
-         * Get the index of the tokenized keyword.
-         * @return the index into the keywords array of the tokenized word or -1 if the current token
-         *      type is not {@link #KEYWORD}
-         * @see #keywords
-         */
-        public int tokenKeyword();
-
-        /**
-         * Get the line number of the current token.
-         * @return the line number of the start of the current token. Lines are numbered from 1, not 0. This
-         *      method returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet,
-         *      or if the current token is {@link #EOF}.
-         * @see #trackPosition
-         */
-        public int tokenLine();
-
-        /**
-         * Get the column number of the current token.
-         * @return The column of the start of the current token. Columns are numbered from 1 not 0. This method
-         *      returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet, or
-         *      if the current token is {@link #EOF}.
-         * @see #trackPosition
-         */
-        public int tokenColumn();
     }
+
+    /**
+     * Get the type of the current token. Valid token types are the token type constants (all negative
+     * values) defined by this interface, and all Unicode characters. Positive return values typically
+     * represent punctuation characters or other single characters that were not tokenized. But see
+     * {@link #quotes} for an exception.
+     * @return they type of the current token, or {@link #BOF} if no tokens have been read yet, or
+     *      {@link #EOF} if no more tokens are available.
+     */
+    public int tokenType();
+
+    /**
+     * Get the text of the current token.
+     * @return the text of the current token as a String, or null, when {@link #tokenType} returns
+     *      {@link #BOF} of {@link #EOF}.
+     *      Tokens delimited by quote characters (see {@link #quotes}) do not include the opening
+     *      and closing delimiters, so this method may return the empty string when an empty quote
+     *      is tokenized. The same is possible after a call to {@link #scan(char, boolean, boolean, boolean)}.
+     */
+    public String tokenText();
+
+    /**
+     * Get the index of the tokenized keyword.
+     * @return the index into the keywords array of the tokenized word or -1 if the current token
+     *      type is not {@link #KEYWORD}
+     * @see #keywords
+     */
+    public int tokenKeyword();
+
+    /**
+     * Get the line number of the current token.
+     * @return the line number of the start of the current token. Lines are numbered from 1, not 0. This
+     *      method returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet,
+     *      or if the current token is {@link #EOF}.
+     * @see #trackPosition
+     */
+    public int tokenLine();
+
+    /**
+     * Get the column number of the current token.
+     * @return The column of the start of the current token. Columns are numbered from 1 not 0. This method
+     *      returns 0 if the tokenizer is not tracking position or if tokenizing has not started yet, or
+     *      if the current token is {@link #EOF}.
+     * @see #trackPosition
+     */
+    public int tokenColumn();
+
+    /**
+     * Make the next token of input the current token, and return its type. Implementations must tokenize
+     * input using the following algorithm, and must perform each step in the order listed.
+     * <ol>
+     *     <li>
+     *         If there are no more input characters, set the current token to {@link #EOF} and
+     *         return that value.
+     *     </li>
+     *     <li>
+     *         If configured to skip or tokenize spaces, and the current character is whitespace, coalesce
+     *         any subsequent whitespace characters into a token. If spaces are being skipped, start
+     *         tokenizing a new token; otherwise, make the space the current token and return {@link #SPACE}.
+     *         See {@link #skipSpaces}, {@link #tokenizeSpaces}, and {@link #tokenizeSpaces}.
+     *     </li>
+     *     <li>
+     *
+     *     </li>
+     * </ol>
+     */
 }
