@@ -314,4 +314,54 @@ public interface Tokenizer {
      * @see #nextChar @see #scan(char, boolean, boolean, boolean)
      */
     public int next() throws IOException;
+
+    /**
+     * Make the next character of input the curren token, and return it.
+     * @return the next character or {#link #EOF} if there are no more.
+     * @see #next @see #scan(char, boolean, boolean, boolean)
+     */
+    public int nextChar() throws IOException;
+
+    /**
+     * Scan until the first occurrence of the specified delimiter character. Because a token scanned in this
+     * way may contain arbitrary characters, the current token type is set to {@link #TEXT}.
+     * @param delimiter the character to scan until.
+     * @param extendCurrentToken if true, the scanned characters extend the current token. Otherwise, they are
+     *                           a token of their own.
+     * @param includeDelimiter if true, then the delimiter character is included at the token. If false, then
+     *                         see skipDelimiter.
+     * @param skipDelimiter if <tt>includeDelmiter</tt> is false, then this parameter specifies whether to skip
+     *                      the delimiter or return it in the next token.
+     * @return the token type {@link #TEXT} if the delimiter character is successfully found. If the delimiter
+     *         is not found, the return value is {@link #EOF} if all input was read, or {@link #OVERFLOW} if
+     *         the maximum token length was exceeded. Note that even when this method does not return
+     *         {@link #TEXT}, {@link #tokenType} does still return that value, and {@link #tokenText} returns
+     *         as much of the token as could be read.
+     * @see #scan(java.lang.String, boolean, boolean, boolean, boolean)
+     * @see #next @see #nextChar
+     */
+    public int scan(char delimiter, boolean extendCurrentToken, boolean includeDelimiter, boolean skipDelimiter)
+        throws IOException;
+
+    /**
+     * This method is just {@link #scan(char, boolean, boolean, boolean)} except that it uses a String delimiter,
+     * possibly containing more than one character.
+     * @param delimiter the string of characters that will terminate the scan. This argument must not be null,
+     *                  and must be of length 1 or greater.
+     * @param matchAll true if all characters of the delimiter must be matched sequentially. False if any one
+     *                 character in the string will do.
+     * @param extendCurrentToken add scanned text to current token if true.
+     * @param includeDelimiter include delimiter text in token if true.
+     * @param skipDelimiter if <tt>includeDelimiter</tt> is false, then this parameter specifies whether to skip
+     *                      the delimiter or return it in the next token.
+     * @return {@link #TEXT}, {@link #EOF}, or {@link #OVERFLOW}. See {@link #scan(char, boolean, boolean, boolean)}
+     *         for details.
+     * @throws java.lang.NullPointerException if delimiter is empty.
+     * @throws java.lang.IllegalArgumentException if delimiter is empty.
+     * @throws java.lang.IllegalArgumentException if matchall is true and includeDelimiter and skipDelimiter are
+     *         both false.
+     * @see #scan(char, boolean, boolean, boolean)
+     */
+    public int scan(String delimiter, boolean matchAll, boolean extendCurrentToken, boolean includeDelimiter,
+                    boolean skipDelimiter) throws IOException;
 }
