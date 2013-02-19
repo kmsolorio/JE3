@@ -26,6 +26,7 @@ public abstract class AbstractTokenizer implements Tokenizer {
 
     boolean eof;
 
+    protected int tokenStart = 0;
     protected int tokenEnd = 0;
     protected int p = 0;
     protected int numChars = 0;
@@ -90,7 +91,13 @@ public abstract class AbstractTokenizer implements Tokenizer {
         if (size < 1) throw new IllegalArgumentException();
         if (text != null) throw new IllegalStateException();
         maximumTokenLength = size;
-        return this
+        return this;
     }
 
+    public int tokenType() { return tokenType; }
+
+    public String tokenText() {
+        if (text == null || tokenStart >= numChars) return null;
+        return new String(text, tokenStart, tokenEnd - tokenStart);
+    }
 }
