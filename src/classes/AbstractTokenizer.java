@@ -59,4 +59,38 @@ public abstract class AbstractTokenizer implements Tokenizer {
         return this;
     }
 
+    public Tokenizer quotes(String openquotes, String closequotes) {
+        if (openquotes == null || closequotes == null)
+            throw new NullPointerException("arguments must be non-null");
+        if (openquotes.length() != closequotes.length())
+            throw new IllegalArgumentException("argument lengths differ");
+        this.openquotes = openquotes;
+        this.closequotes = closequotes;
+        this.testquotes = openquotes.length() > 0;
+        return this;
+    }
+
+    public Tokenizer trackPosition(boolean track) {
+        if (text != null) throw new IllegalStateException();
+        trackPosition = track;
+        return this;
+    }
+
+    public Tokenizer keywords(String[] keywords) {
+        if (keywords != null) {
+            keywordMap = new HashMap(keywords.length);
+            for (int i = 0; i < keywords.length; i ++)
+                keywordMap.put(keywords[i], new Integer(i));
+        }
+        else keywordMap = null;
+        return this;
+    }
+
+    public Tokenizer maximumTokenLength(int size) {
+        if (size < 1) throw new IllegalArgumentException();
+        if (text != null) throw new IllegalStateException();
+        maximumTokenLength = size;
+        return this
+    }
+
 }
