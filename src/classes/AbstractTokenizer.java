@@ -100,4 +100,49 @@ public abstract class AbstractTokenizer implements Tokenizer {
         if (text == null || tokenStart >= numChars) return null;
         return new String(text, tokenStart, tokenEnd - tokenStart);
     }
+
+    public int tokenLine() {
+        if (trackPosition && tokenStart < numChars) return tokenLine;
+        else return 0;
+    }
+
+    public int tokenColumn() {
+        if (trackPosition && tokenStart < numChars) return tokenColumn;
+        else return 0;
+
+    }
+
+    public int tokenKeyword() {
+        if (tokenType == KEYWORD) return tokenKeyword;
+        else return -1;
+    }
+
+    public int next() throws IOException {
+        int quoteIndex;
+        beginNewToken();
+        if (eof) return tokenType = EOF;
+
+        char c = text[p];
+
+        if ((skipSpaces || tokenizeSpaces) && Character.isWhitespace(c)) {
+            tokenType = SPACE;
+            do {
+                if (trackPosition) updatePosition(text[p]);
+                p ++;
+                if (p >= numChars) eof = !fillBuffer();
+            } while (!eof && Character.isWhitespace(text[p]));
+
+            tokenEnd = p;
+        }
+        else if (tokenizeNumbers && Character.isDigit(c)){
+            tokenType = NUMBER;
+            do {
+                if (trackPosition) column ++;
+                p ++;
+                if (p >= numChars) eof = !fillBuffer();
+            } while (!eof && Character.isDigit(text[p]));
+
+            tokenEnd = p;
+        }
+    }
 }
