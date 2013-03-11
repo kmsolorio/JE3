@@ -185,4 +185,16 @@ public abstract class AbstractTokenizer implements Tokenizer {
                 tokenEnd <= p && p <= numChars && numChars <= text.length;
         return tokenType;
     }
+
+    public int nextChar() throws IOException {
+        beginNewToken();
+        if (eof) return tokenType = EOF;
+        tokenType = text[p];
+        if (trackPosition) updatePosition(text[p]);
+        tokenEnd = ++p;
+
+        assert text != null && 0 <= tokenStart && tokenStart <= tokenEnd &&
+                tokenEnd <= p && p <= numChars && numChars <= text.length;
+        return tokenType;
+    }
 }
