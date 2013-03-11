@@ -197,4 +197,16 @@ public abstract class AbstractTokenizer implements Tokenizer {
                 tokenEnd <= p && p <= numChars && numChars <= text.length;
         return tokenType;
     }
+
+    public int scan(char delimiter, boolean extendCurrentToken, boolean includeDelimiter, boolean skipDelimiter)
+        throws IOException
+    {
+        return scan(new char[] { delimiter }, false, extendCurrentToken, includeDelimiter, skipDelimiter);
+    }
+
+    public int scan(String delimiter, boolean matchall, boolean extendCurrentToken, boolean includeDelimiter,
+                    boolean skipDelimiter) throws IOException
+    {
+        return scan(delimiter.toCharArray(), matchall, extendCurrentToken, includeDelimiter, skipDelimiter);
+    }
 }
