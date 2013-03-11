@@ -118,7 +118,7 @@ public abstract class AbstractTokenizer implements Tokenizer {
     }
 
     public int next() throws IOException {
-        int quoteIndex;
+        int quoteindex;
         beginNewToken();
         if (eof) return tokenType = EOF;
 
@@ -144,5 +144,45 @@ public abstract class AbstractTokenizer implements Tokenizer {
 
             tokenEnd = p;
         }
+        else if (tokenizeWords &&
+                    (wordRecognizer != null
+                        ?wordRecognizer.isWordStart(c)
+                        :Character.isJavaIdentifierStart(c))) {
+            tokenType = WORD;
+            do {
+                if (trackPosition) column ++;
+                p ++;
+                if (p > numChars) eof = !fillBuffer();
+            } while (!eof &&
+                        (wordRecognizer != null
+                            ?wordRecognizer.isWordPart(text[p], c)
+                            :Character.isJavaIdentifierPart(text[p])));
+
+            if (keywordMap != null) {
+                String ident = new String(text, tokenStart, p - tokenStart);
+                Integer index = (Integer) keywordMap.get(ident);
+                if (index != null) {
+                    tokenType = KEYWORD;
+                    tokenKeyword = index.intValue();
+                }
+                tokenEnd = p;
+            }
+        }
+        else if (testquotes && (quoteindex = openquotes.indexOf(c)) != -1) {
+            if (trackPosition) column ++;
+            p ++;
+            char closequote = closequotes.charAt(quoteindex);
+            scan(closequote,  false, false, true);
+            tokenType = c;
+        }
+        else {
+            if (trackPosition) updatePosition(text[p]);
+            tokenType = text[p];
+            p ++;
+            tokenEnd = p;
+        }
+        assert text != null && 0 <= tokenStart && tokenStart <= tokenEnd &&
+                tokenEnd <= p && p <= numChars && numChars <= text.length;
+        return tokenType;
     }
 }
