@@ -209,4 +209,71 @@ public abstract class AbstractTokenizer implements Tokenizer {
     {
         return scan(delimiter.toCharArray(), matchall, extendCurrentToken, includeDelimiter, skipDelimiter);
     }
+
+    protected int scan(char[] delimiter, boolean matchAll, boolean extendCurrentToken, boolean includeDelimiter,
+                       boolean skipDelimiter) throws IOException
+    {
+        if (matchAll & !includeDelimiter && !skipDelimiter)
+            throw new IllegalArgumentException("must include or skip delimiter when matchAll is true");
+
+        if (extendCurrentToken) ensureChars();
+        else beginNewToken();
+
+        tokenType = TEXT;
+        if (eof) return EOF;
+
+        int delimiterMatchIndex = 0;
+        String delimString = null;
+        if (!matchAll && delimiter.length > 0) delimString = new String(delimiter);
+
+        while(!eof) {
+            if (delimiter.length == 1) {
+                if (text[p] == delimiter[0]) break;
+            }
+            else if (matchAll) {
+                if (text[p] == delimiter[delimiterMatchIndex]) {
+                    delimiterMatchIndex ++;
+                    if (delimiterMatchIndex == delimiter.length) break;
+                }
+                else delimiterMatchIndex = 0;
+            }
+            else {
+                if (delimString.indexOf(text[p]) != -1) break;
+            }
+
+            if (trackPosition) updatePosition(text[p]);
+            p ++;
+            if (p >= numChars) {
+                if (tokenStart > 0)
+                    eof = !fillBuffer();
+                else {
+                    tokenEnd = p;
+                    return OVERFLOW;
+                }
+            }
+        }
+
+        if (eof) {
+            tokenEnd = p;
+            return EOF;
+        }
+
+        if (includeDelimiter) {
+            if (trackPosition) updatePosition(text[p]);
+            p ++;
+            tokenEnd = p;
+        }
+        else if (skipDelimiter) {
+            if (trackPosition) updatePosition(text[p]);
+            p ++;
+            if (matchAll) tokenEnd = p - delimiter.length;
+            else tokenEnd = p - 1;
+        }
+        else tokenEnd = p;
+
+        assert text != null && 0 <= tokenStart && tokenStart <= tokenEnd &&
+                tokenEnd <= p && p <= numChars && numChars <= text.length;
+
+        return TEXT;
+    }
 }
