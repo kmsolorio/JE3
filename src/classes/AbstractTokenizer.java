@@ -276,4 +276,35 @@ public abstract class AbstractTokenizer implements Tokenizer {
 
         return TEXT;
     }
+
+    private void ensureChars() throws IOException {
+        if (text == null) {
+            createBuffer(maximumTokenLength);
+            p = tokenStart = tokenEnd = 0;
+            if (trackPosition) line = column = 1;
+        }
+        if (!eof && p >= numChars)
+            eof = !fillBuffer();
+
+        assert text != null && 0 <= tokenStart && tokenStart <= tokenEnd &&
+                tokenEnd <= p && (p < numChars || (p == numChars && eof)) &&
+                numChars <= text.length;
+    }
+
+    private void beginNewToken() throws IOException {
+        ensureChars();
+        if (!eof) {
+            tokenStart = p;
+            tokenColumn = column;
+            tokenLine = line;
+        }
+    }
+
+    private void updatePosition(char c) {
+        if (c == '\n') {
+            line ++;
+            column = 1;
+        }
+        else column ++;
+    }
 }
