@@ -80,7 +80,7 @@ public class FileViewer extends Frame implements ActionListener {
         finally { try { if (in != null) in.close(); } catch (IOException e) {} }
     }
 
-    public void actionPermormed(ActionEvent e) {
+    public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
         if (cmd.equals("open")) {
             FileDialog f = new FileDialog(this, "Open File", FileDialog.LOAD);
@@ -101,11 +101,11 @@ public class FileViewer extends Frame implements ActionListener {
             @Override
             public void windowClosed(WindowEvent e) {
                 System.exit(0);
-            });
-
-            f.show();
-
+            }
         });
-    }
 
+        f.show();
+
+    }
 }
+
