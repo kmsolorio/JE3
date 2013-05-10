@@ -81,7 +81,31 @@ public class FileViewer extends Frame implements ActionListener {
     }
 
     public void actionPermormed(ActionEvent e) {
+        String cmd = e.getActionCommand();
+        if (cmd.equals("open")) {
+            FileDialog f = new FileDialog(this, "Open File", FileDialog.LOAD);
+            f.setDirectory(directory);
 
+            f.show();
+
+            directory = f.getDirectory();
+            setFile(directory, f.getFile());
+            f.dispose();
+        }
+        else if (cmd.equals("close")) this.dispose();
+    }
+
+    static public void main(String[] args) throws IOException {
+        Frame f = new FileViewer((args.length == 1) ? args[0] : null);
+        f.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                System.exit(0);
+            });
+
+            f.show();
+
+        });
     }
 
 }
