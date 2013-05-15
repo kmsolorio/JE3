@@ -129,14 +129,14 @@ public class FileLister extends Frame implements ActionListener, ItemListener {
             if (args[i].equals("-e")) {
                 if (++i >= args.length) usage();
                 final String suffix = args[i];
-            }
 
-            filter = new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    if (name.endsWith(suffix)) return true;
-                    else return (new File(dir, name)).isDirectory();
-                }
+                filter = new FilenameFilter() {
+                    @Override
+                    public boolean accept(File dir, String name) {
+                        if (name.endsWith(suffix)) return true;
+                        else return (new File(dir, name)).isDirectory();
+                    }
+                };
             }
             else {
                 if (directory != null) usage();
