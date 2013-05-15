@@ -73,4 +73,83 @@ public class FileLister extends Frame implements ActionListener, ItemListener {
 
         currentDir = dir;
     }
+
+    public void itemStateChanged(ItemEvent e) {
+        int i = list.getSelectedIndex() - 1;
+        if (i < 0) return;
+        String filename = files[i];
+        File f = new File(currentDir, filename);
+        if (!f.exists())
+            throw new IllegalArgumentException("FileLister: " + "no such file or directory");
+
+        String info = filename;
+        if (f.isDirectory()) info += File.separator;
+        info += " " + f.length() + " bytes ";
+        info += dateFormatter.format(new java.util.Date(f.lastModified()));
+        if (f.canRead()) info += " Read";
+        if (f.canWrite()) info += "Write";
+
+        details.setText(info);
+    }
+
+    public void actionPerformed(ActionEvent e) {
+        if (e.getSource() == close) this.dispose();
+        else if (e.getSource() == up) { up(); }
+        else if (e.getSource() == list) {
+            int i = list.getSelectedIndex();
+            if (i == 0) up();
+            else {
+                String name = files[i-1];
+                File f = new File(currentDir, name);
+                String fullname = f.getAbsolutePath();
+                if (f.isDirectory()) listDirectory(fullname);
+                else new FileViewer(fullname).show();
+            }
+        }
+    }
+
+    protected void up() {
+        String parent = currentDir.getParent();
+        if (parent == null) return;
+        listDirectory(parent);
+    }
+
+    public static void usage() {
+        System.out.println("Usage: java FileLister [directory_name] " +
+                            "[-e file_extension]");
+        System.exit(0);
+    }
+
+    public static void main(String[] args) throws IOException {
+        FileLister f;
+        FilenameFilter filter = null;
+        String directory = null;
+
+        for (int i = 0; i < args.length; i ++) {
+            if (args[i].equals("-e")) {
+                if (++i >= args.length) usage();
+                final String suffix = args[i];
+            }
+
+            filter = new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    if (name.endsWith(suffix)) return true;
+                    else return (new File(dir, name)).isDirectory();
+                }
+            }
+            else {
+                if (directory != null) usage();
+                else directory = args[i];
+            }
+        }
+
+        if (directory == null) directory = System.getProperty("user.dir");
+        f = new FileLister(directory, filter);
+        f.addWindowListener(new WindowAdapter() {
+            public void windowClosed(WindowEvent e) { System.exit(0); }
+        });
+        f.show();
+    }
+
 }
