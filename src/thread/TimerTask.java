@@ -12,7 +12,7 @@ public abstract class TimerTask implements Runnable {
     public boolean cancel() {
         if (cancelled) return false;
         cancelled = true;
-        if (nextTime == -1) return false
+        if (nextTime == -1) return false;
         return true;
     }
 
